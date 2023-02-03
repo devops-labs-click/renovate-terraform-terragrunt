@@ -1,0 +1,45 @@
+{
+  lockFileMaintenance: {
+    enabled: true,
+  },
+  "pre-commit": {
+    enabled: true,
+  },
+  packageRules: [
+    {
+      matchPackagePatterns: ".*",
+      matchUpdateTypes: ["minor", "patch", "pin", "digest", "pinDigest"],
+      groupName: "all dependencies (non-major versions)",
+      groupSlug: "all-non-major",
+    },
+    {
+      matchManagers: ["pyenv"],
+      matchUpdateTypes: ["minor"],
+      groupName: "python version (minor)",
+      groupSlug: "python-version-minor",
+    },
+    {
+      matchManagers: ["terraform"],
+      matchDepTypes: ["required_provider", "required_version"],
+      enabled: false
+    },
+    {
+      matchManagers: ["terraform", "npm", "terragrunt"],
+      rangeStrategy: "update-lockfile"
+    },
+    {
+      matchManagers: ["dockerfile"],
+      pinDigests: true,
+    },
+  ],
+  regexManagers: [
+    {
+      fileMatch: ["(^|/|.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s(?:ENV|ARG) .+?_VERSION="?(?<currentValue>.+?)"?\\s',
+      ],
+      versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}",
+    },
+  ],
+  separateMajorMinor: true,
+}

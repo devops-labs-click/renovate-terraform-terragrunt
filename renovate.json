@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "github>devops-labs-click/renovate-terraform-terragrunt:renovate-default.json5"
+  ],
+  "packageRules": [
+    {
+      "packageNames": ["python"],
+      "rangeStrategy": "bump",
+      "allowedVersions": "<=3.9.x"
+    }
+  ],
+  "postUpdateOptions": ["gomodTidy"]
+}
